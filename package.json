@@ -1,0 +1,22 @@
+{
+  "name": "filex-lang-template",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Translate filex into your language and ship it as a language pack.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node scripts/pack.mjs start",
+    "next": "node scripts/pack.mjs next",
+    "build": "node scripts/pack.mjs build",
+    "sync": "node scripts/pack.mjs sync",
+    "validate": "node scripts/pack.mjs build --check && node scripts/validate.mjs filex-app.json",
+    "check": "node scripts/pack.mjs build --check && node scripts/validate.mjs filex-app.json"
+  },
+  "devDependencies": {
+    "@intlify/message-compiler": "9.14.5"
+  }
+}

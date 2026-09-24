@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "name": "lang-xx",
+  "version": "0.1.0",
+  "label": {
+    "en": "Language pack (xx)"
+  },
+  "description": {
+    "en": "A starting point: run `node scripts/pack.mjs start <tag> \"<Language>\"` to make it yours."
+  },
+  "homepage": "https://github.com/BRF-Tech/filex-lang-template",
+  "permissions": [],
+  "ui_locales": {
+    "xx": {
+      "appPlugins.title": "Apps (xx)",
+      "ctx.download": "Download (xx)",
+      "dashboard.fileCount": "{n} file (xx) | {n} files (xx)",
+      "home.title": "Home (xx)",
+      "toast.restored": "{n} items restored (xx)",
+      "toast.restored_one": "{n} item restored (xx)"
+    }
+  }
+}
