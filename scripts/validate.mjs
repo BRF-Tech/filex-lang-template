@@ -139,7 +139,7 @@ export function formOf(key) {
  *
  * A message is plural BRANCHES separated by `|`; each branch is text with
  * `{name}` (named), `{0}` (list), `{'…'}` (literal: the way to write @ { } |)
- * and `@:key` / `@.mod:key` (linked). A bare `@` starts a link, so an e-mail
+ * and `@:key` / `@.mod:key` (linked). A bare `@` starts a link, so an email
  * address or a handle in a translation breaks the string; `%` right before
  * `{` is the deprecated modulo form and EATS the percent sign
  * (`%{percent}` renders "97", not "%97" — measured on vue-i18n 9.14).
@@ -317,15 +317,33 @@ function tsObjectLiteral(src, name, file) {
 /** The server table of a checkout: the server's catalogue and the notification phrases. */
 function loadServerTable(src) {
   const out = JSON.parse(fs.readFileSync(path.join(src, 'backend', 'internal', 'srvtext', 'locales', 'en.json'), 'utf8'));
-  const file = path.join(src, 'web', 'src', 'lib', 'notificationText.ts');
+  // ⚠ The phrases moved from web/src/lib to packages/core/src/lib on
+  // 2026-09-27 (the desktop app draws the same bell). A checkout older than
+  // that still has them in web/, and this file validates against whichever
+  // checkout it is pointed at — so the new home first, then the old one.
+  const file = [
+    path.join(src, 'packages', 'core', 'src', 'lib', 'notificationText.ts'),
+    path.join(src, 'web', 'src', 'lib', 'notificationText.ts'),
+  ].find((f) => fs.existsSync(f)) ?? path.join(src, 'packages', 'core', 'src', 'lib', 'notificationText.ts');
   const ts = fs.readFileSync(file, 'utf8');
+  /* ⚠ MUST match scripts/lib/i18n-catalogue.mjs (loadNotifyTables): a value
+     that is one bare `{placeholder}` is not exported — there is no word in it
+     to translate — and the four fallback WORDS now live in the server's own
+     en.json, beside the mail that shares two of them. This file is copied
+     verbatim into filex-lang-template and cannot import the other one, so the
+     two say the same thing twice on purpose; when one changes, change both or
+     the validator reports keys the catalogue never shipped. */
+  const bare = /^\s*\{[A-Za-z0-9_]+\}\s*$/;
+  const say = (key, value) => {
+    if (typeof value === 'string' && value && !bare.test(value)) out[key] = value;
+  };
   for (const [event, byLang] of Object.entries(tsObjectLiteral(ts, 'NOTIFICATION_PHRASES', file))) {
     const p = byLang.en;
-    out[`server.notify.${event}.title`] = p.title;
-    out[`server.notify.${event}.body`] = p.body;
-    for (const [f, v] of Object.entries(p.one ?? {})) out[`server.notify.${event}.${f}_one`] = v;
+    say(`server.notify.${event}.title`, p.title);
+    say(`server.notify.${event}.body`, p.body);
+    for (const [f, v] of Object.entries(p.one ?? {})) say(`server.notify.${event}.${f}_one`, v);
+    for (const [f, v] of Object.entries(p.file ?? {})) say(`server.notify.${event}.${f}_file`, v);
   }
-  for (const [w, v] of Object.entries(tsObjectLiteral(ts, 'WORDS', file).en ?? {})) out[`server.notify.word.${w}`] = v;
   return out;
 }
 
@@ -505,7 +523,7 @@ export function checkLanguage(lang, pack, cat, { complete = false } = {}) {
         if (gone.length) err(key, 'PLACEHOLDER', `leaves out {${gone.join('} {')}}${why} — the server refuses this translation and sends the English`);
         if (/\{\{|\}\}|%[sdvqf]\b/.test(value)) err(key, 'SYNTAX', 'the server text knows only {name} placeholders — {{…}} and %s print as written');
         if (/\{\s*'/.test(value)) err(key, 'LITERAL', "{'…'} prints as written in server text — write the character itself");
-        if (/\.subject(_[a-z]+)?$/.test(key) && /[\r\n]/.test(value)) err(key, 'SUBJECT', 'an e-mail subject is one line');
+        if (/\.subject(_[a-z]+)?$/.test(key) && /[\r\n]/.test(value)) err(key, 'SUBJECT', 'an email subject is one line');
       } else {
         if (bad.length) err(key, 'PLACEHOLDER', `uses {${bad.join('} {')}}, which the English does not — it would print as written`);
         if (gone.length) warn(key, 'PLACEHOLDER', `leaves out {${gone.join('} {')}}${why} — that value will not appear`);
@@ -644,7 +662,7 @@ function main(argv) {
   }
   const serverKeys = Object.keys(cat.strings).filter((key) => cat.table[key] === 'server').length;
   console.log('filex language pack validator');
-  console.log(`  catalogue : ${report.catalogue} — ${Object.keys(cat.strings).length} strings (${serverKeys} of them the server's: e-mails, public pages, notifications)`);
+  console.log(`  catalogue : ${report.catalogue} — ${Object.keys(cat.strings).length} strings (${serverKeys} of them the server's: emails, public pages, notifications)`);
   console.log(`  syntax    : ${report.syntax}`);
   console.log(`  pack      : ${file}${isManifest ? ' (filex-app.json)' : ''}`);
   for (const p of report.manifest) console.log(`  ERROR ${p.code.padEnd(11)} ${p.msg}`);
