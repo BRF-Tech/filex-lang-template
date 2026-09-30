@@ -80,6 +80,22 @@ export function plainTokens(text) {
 
 const uniq = (xs) => [...new Set(xs)].sort();
 
+/* ── dashes: a plain hyphen, never an em or en dash ───────────────────────
+ *
+ * filex's own catalogues write "-" where they used to write an em dash or an
+ * en dash, ranges included ("a-z", "3-60"): the long dashes read as a
+ * machine's hand in the interface (web/tests/i18n/noLongDashes.test.ts keeps
+ * them out of en/tr). A pack follows the same rule, in every table.
+ * Built from their code points, so no editor or tool can quietly turn the
+ * check into the character it looks for (or into a plain hyphen).
+ */
+export const LONG_DASHES = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)];
+
+export function hasLongDash(text) {
+  const s = String(text);
+  return LONG_DASHES.some((d) => s.includes(d));
+}
+
 /* ── plurals: CLDR categories ─────────────────────────────────────────────
  *
  * Every table picks a plural form by the CLDR category Intl.PluralRules
@@ -464,6 +480,7 @@ export function checkLanguage(lang, pack, cat, { complete = false } = {}) {
       continue;
     }
     if (inCatalogue) translated += 1;
+    if (hasLongDash(value)) err(key, 'DASH', 'an em dash or an en dash: write a plain hyphen "-" (" - " between two clauses, "3-60" for a range)');
     const table = cat.table[formBase || key];
     const en = inCatalogue ? cat.strings[key] : cat.strings[formBase];
     if (inCatalogue && value === en) identical += 1;
