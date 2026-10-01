@@ -85,6 +85,13 @@ translation as it sends it, and a line whose placeholders differ from the
 English is dropped in favour of the English — better a message in the wrong
 language than a share e-mail without its link. An e-mail subject is one line.
 
+In every table, a dash is the plain hyphen `-`: ` - ` between two clauses,
+`3-60` for a range, `-1` for a negative number. The validator refuses an em
+dash, an en dash and the characters that only pass for a hyphen (U+2010,
+U+2011, U+2012, U+2015 and the minus sign U+2212): they read as a machine's
+hand, and a search for "read-only" misses the word spelled with U+2011. The one
+exception is a label that is the minus sign alone, such as a zoom-out button.
+
 ### Plural forms
 
 filex picks a plural form by the **CLDR category** the count falls into in the
@@ -146,8 +153,8 @@ node scripts/validate.mjs filex-app.json
 ```
 
 The validator checks every string against the catalogue: placeholders, plural
-forms, the `@` / bar / `{'…'}` / `%{` rules for the table it belongs to, key
-shapes and the size limits filex enforces. It exits non-zero on an error.
+forms, the `@` / bar / `{'…'}` / `%{` rules for the table it belongs to, the
+plain hyphen, key shapes and the size limits filex enforces. It exits non-zero on an error.
 
 The limits are **bytes**, not a count of strings — the old 2 000-strings cap is
 gone, because filex's catalogue is 3 593 keys. One language: **1 MiB** of keys

@@ -91,9 +91,52 @@ const uniq = (xs) => [...new Set(xs)].sort();
  */
 export const LONG_DASHES = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)];
 
-export function hasLongDash(text) {
+/*
+ * ...and the characters that pass for a hyphen without being one. They look
+ * like "-" (U+2011 renders exactly like one) and are not "-": a search for
+ * "read-only" misses the word spelled with U+2011 in the middle, a negative
+ * number copied out of the docs with U+2212 in front is one no field accepts,
+ * and a heading holding one loses its anchor (web/tests/docs/anchorSlug.test.ts).
+ * In 0.50, 389 non-breaking hyphens were found in the documentation, where no
+ * gate looked.
+ *
+ * A MINUS SIGN (U+2212) is the one with a job of its own: a button whose whole
+ * label is the glyph, beside a "+" (zoom out), where a hyphen would sit too
+ * short and too low. That - the text, trimmed, is the minus sign and nothing
+ * else - is the only place it is accepted. Inside words or numbers it is a
+ * dash or a negative number, and both are written "-", arithmetic included: a
+ * reader copies an expression out of the docs, and every field and every
+ * shell takes "-".
+ */
+export const DASH_LOOKALIKES = new Map([
+  [0x2014, 'an em dash'],
+  [0x2013, 'an en dash'],
+  [0x2010, 'a typographic hyphen (U+2010)'],
+  [0x2011, 'a non-breaking hyphen (U+2011)'],
+  [0x2012, 'a figure dash (U+2012)'],
+  [0x2015, 'a horizontal bar (U+2015)'],
+  [0x2212, 'a minus sign (U+2212)'],
+]);
+const MINUS_SIGN = String.fromCharCode(0x2212);
+
+/**
+ * What in `text` is not a plain hyphen but stands for one: the name of the
+ * first such character (see DASH_LOOKALIKES), or null. A text that is the
+ * minus sign alone, trimmed, is a symbol and passes.
+ */
+export function dashProblem(text) {
   const s = String(text);
-  return LONG_DASHES.some((d) => s.includes(d));
+  if (s.trim() === MINUS_SIGN) return null;
+  for (const ch of s) {
+    const name = DASH_LOOKALIKES.get(ch.codePointAt(0));
+    if (name) return name;
+  }
+  return null;
+}
+
+/** Kept for its callers: true when dashProblem finds anything. */
+export function hasLongDash(text) {
+  return dashProblem(text) !== null;
 }
 
 /* ── plurals: CLDR categories ─────────────────────────────────────────────
@@ -480,7 +523,8 @@ export function checkLanguage(lang, pack, cat, { complete = false } = {}) {
       continue;
     }
     if (inCatalogue) translated += 1;
-    if (hasLongDash(value)) err(key, 'DASH', 'an em dash or an en dash: write a plain hyphen "-" (" - " between two clauses, "3-60" for a range)');
+    const dash = dashProblem(value);
+    if (dash) err(key, 'DASH', `${dash}: write a plain hyphen "-" (" - " between two clauses, "3-60" for a range, "-1" for a negative number)`);
     const table = cat.table[formBase || key];
     const en = inCatalogue ? cat.strings[key] : cat.strings[formBase];
     if (inCatalogue && value === en) identical += 1;
