@@ -157,8 +157,8 @@ forms, the `@` / bar / `{'…'}` / `%{` rules for the table it belongs to, the
 plain hyphen, key shapes and the size limits filex enforces. It exits non-zero on an error.
 
 The limits are **bytes**, not a count of strings — the old 2 000-strings cap is
-gone, because filex's catalogue is 3 593 keys. One language: **1 MiB** of keys
-plus values (a complete translation runs ~335 KB, more in a two-byte script).
+gone, because filex's catalogue is 5 502 keys. One language: **1 MiB** of keys
+plus values (a complete translation runs ~400 KB, more in a two-byte script).
 One manifest: **4 MiB** across its languages, and **16 MiB** as a document.
 One key: **128 bytes**, of the dotted shape above. One string: **4 KiB**.
 
@@ -224,7 +224,7 @@ scripts/validate.mjs               the validator (the same one filex's own tests
 .github/workflows/validate.yml     CI
 ```
 
-The catalogue here is for **filex v0.43.0**. Every filex release attaches its
+The catalogue here is for **filex v0.51.0**. Every filex release attaches its
 own (`filex-catalogue-en.json`), and every running server serves it at
 `/admin/i18n/filex-catalogue-en.json`.
 
