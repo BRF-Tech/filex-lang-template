@@ -5,7 +5,7 @@
  *   node scripts/pack.mjs start <tag> "<Language name in English>"
  *   node scripts/pack.mjs next [count]          the next untranslated strings
  *   node scripts/pack.mjs build [--check]       translations/*.json → filex-app.json
- *   node scripts/pack.mjs sync [--from <src>]   refresh catalogue/, add new keys
+ *   node scripts/pack.mjs sync [--from <src>]   refresh catalogue/, add new keys, name the reworded ones
  *
  * A language pack is ONE file filex reads — filex-app.json, with every
  * language under `ui_locales`. You edit translations/<tag>.json (easier to
@@ -148,6 +148,14 @@ if (cmd === 'start') {
   // Refresh the catalogue from a filex release, a running filex, or a folder,
   // then give every translation the keys it lacks (empty) and name the ones
   // filex no longer has.
+  //
+  // It also names the keys whose ENGLISH changed since the last sync: their
+  // translation was written for the old words. It is kept - filex shows it -
+  // until you translate the key again, so the list is printed rather than
+  // the translation emptied. (Before, a reworded string kept its old
+  // translation without a word.)
+  const enFile = path.join(CAT, 'filex-catalogue-en.json');
+  const before = fs.existsSync(enFile) ? readJSON(enFile) : {};
   const from = args[args.indexOf('--from') + 1];
   if (args.includes('--from') && from) {
     const names = ['filex-catalogue-en.json', 'filex-catalogue-context.json'];
@@ -167,16 +175,24 @@ if (cmd === 'start') {
     console.log(`catalogue/ refreshed from ${from}`);
   }
   const { strings } = catalogue();
+  const reworded = Object.keys(strings).filter((k) => k in before && before[k] !== strings[k]);
   for (const tag of languages()) {
     const file = path.join(TRANS, `${tag}.json`);
     const t = readJSON(file);
     const next = {};
     for (const k of Object.keys(strings)) next[k] = typeof t[k] === 'string' ? t[k] : '';
-    const gone = Object.keys(t).filter((k) => !(k in strings));
-    for (const k of gone) next[k] = t[k];
+    // Everything else stays, after the catalogue's keys: the plural forms
+    // your language adds (`x_few`) and the keys filex no longer has.
+    const extra = Object.keys(t).filter((k) => !(k in strings));
+    for (const k of extra) next[k] = t[k];
     writeJSON(file, next);
+    const gone = extra.filter((k) => !known(strings, k));
     const added = Object.keys(strings).filter((k) => !(k in t)).length;
     console.log(`[${tag}] ${added} new key(s) added (empty); ${gone.length} key(s) filex no longer has${gone.length ? `: ${gone.slice(0, 10).join(', ')}` : ''}`);
+    const stale = reworded.filter((k) => typeof t[k] === 'string' && t[k].trim());
+    if (stale.length) {
+      console.log(`[${tag}] ${stale.length} key(s) whose English changed - translate them again (the old translation shows until you do): ${stale.slice(0, 10).join(', ')}${stale.length > 10 ? ', ...' : ''}`);
+    }
   }
   writeJSON(MANIFEST, manifestFromTranslations());
 } else {

@@ -207,6 +207,16 @@ node scripts/pack.mjs sync --from https://files.example.com  # your own server
 Then translate what is new, bump `version` in `filex-app.json`, and use
 **Upgrade** on the pack's row in **Plugins → Apps**.
 
+`sync` also names the keys whose **English changed** since your last sync:
+
+```
+[es] 3 key(s) whose English changed - translate them again (the old translation shows until you do): users.subtitle, …
+```
+
+Their translation was written for the old words. It stays, and filex keeps
+showing it, until you translate the key again - so read each one against the
+new English in `catalogue/filex-catalogue-en.json`.
+
 A key filex no longer has stays in `translations/<tag>.json` (its wording is
 often worth recycling when the same idea comes back under another name) but
 `build` keeps it **out of** `filex-app.json`, so a retired key never shows up
