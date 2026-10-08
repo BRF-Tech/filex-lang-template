@@ -5,7 +5,7 @@
  *   node scripts/pack.mjs start <tag> "<Language name in English>"
  *   node scripts/pack.mjs next [count]          the next untranslated strings
  *   node scripts/pack.mjs build [--check]       translations/*.json → filex-app.json
- *   node scripts/pack.mjs sync [--from <src>]   refresh catalogue/, add new keys, name the reworded ones
+ *   node scripts/pack.mjs sync [--from <src>]   refresh catalogue/, add new keys, drop retired ones, name the reworded ones
  *
  * A language pack is ONE file filex reads — filex-app.json, with every
  * language under `ui_locales`. You edit translations/<tag>.json (easier to
@@ -77,11 +77,10 @@ function manifestFromTranslations() {
       // An empty value is "not translated yet": filex would show the English
       // for it anyway, so it stays out of the manifest and out of the coverage.
       if (typeof v !== 'string' || !v.trim()) continue;
-      // A key filex NO LONGER HAS stays out too. `sync` deliberately keeps it
-      // in translations/<tag>.json -- wording worth recycling when the key
-      // comes back under another name -- but shipping it made the validator
-      // warn UNKNOWN about every one of them on a pack that was otherwise
-      // clean, and the server ignores them.
+      // A key filex NO LONGER HAS stays out too. `sync` drops it from
+      // translations/<tag>.json, but one written by hand (or kept by a sync
+      // before filex 0.54) would make the validator warn UNKNOWN on a pack
+      // that is otherwise clean, and the server ignores it.
       if (!known(strings, k)) {
         stale.push(`${tag}:${k}`);
         continue;
@@ -146,8 +145,8 @@ if (cmd === 'start') {
   }
 } else if (cmd === 'sync') {
   // Refresh the catalogue from a filex release, a running filex, or a folder,
-  // then give every translation the keys it lacks (empty) and name the ones
-  // filex no longer has.
+  // then give every translation the keys it lacks (empty) and drop, by name,
+  // the ones filex no longer has.
   //
   // It also names the keys whose ENGLISH changed since the last sync: their
   // translation was written for the old words. It is kept - filex shows it -
@@ -181,14 +180,18 @@ if (cmd === 'start') {
     const t = readJSON(file);
     const next = {};
     for (const k of Object.keys(strings)) next[k] = typeof t[k] === 'string' ? t[k] : '';
-    // Everything else stays, after the catalogue's keys: the plural forms
-    // your language adds (`x_few`) and the keys filex no longer has.
+    // After the catalogue's keys, the plural forms your language adds
+    // (`x_few`) stay. A key filex NO LONGER HAS leaves, filled or empty: a
+    // filex release drops some every time, and a pack's own validators
+    // refuse such a key as UNKNOWN. Kept, filex 0.53's `tenants.modeOff`
+    // made every pack's check fail until it was deleted by hand. Its wording
+    // is still in the pack's git history.
     const extra = Object.keys(t).filter((k) => !(k in strings));
-    for (const k of extra) next[k] = t[k];
-    writeJSON(file, next);
     const gone = extra.filter((k) => !known(strings, k));
+    for (const k of extra) if (known(strings, k)) next[k] = t[k];
+    writeJSON(file, next);
     const added = Object.keys(strings).filter((k) => !(k in t)).length;
-    console.log(`[${tag}] ${added} new key(s) added (empty); ${gone.length} key(s) filex no longer has${gone.length ? `: ${gone.slice(0, 10).join(', ')}` : ''}`);
+    console.log(`[${tag}] ${added} new key(s) added (empty); ${gone.length} key(s) filex no longer has${gone.length ? ` dropped: ${gone.slice(0, 10).join(', ')}${gone.length > 10 ? ', ...' : ''}` : ''}`);
     const stale = reworded.filter((k) => typeof t[k] === 'string' && t[k].trim());
     if (stale.length) {
       console.log(`[${tag}] ${stale.length} key(s) whose English changed - translate them again (the old translation shows until you do): ${stale.slice(0, 10).join(', ')}${stale.length > 10 ? ', ...' : ''}`);

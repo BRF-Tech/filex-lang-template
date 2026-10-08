@@ -197,7 +197,7 @@ manager, the admin panel, the public pages and the e-mails alike.
 ## 5. Keep it current
 
 When a new filex version adds strings, refresh the catalogue and pick up the
-new keys (they are added empty; keys filex no longer has are reported):
+new keys (they are added empty; keys filex no longer has are dropped, by name):
 
 ```bash
 node scripts/pack.mjs sync --from v0.44.0                  # a filex release
@@ -217,10 +217,14 @@ Their translation was written for the old words. It stays, and filex keeps
 showing it, until you translate the key again - so read each one against the
 new English in `catalogue/filex-catalogue-en.json`.
 
-A key filex no longer has stays in `translations/<tag>.json` (its wording is
-often worth recycling when the same idea comes back under another name) but
-`build` keeps it **out of** `filex-app.json`, so a retired key never shows up
-as a warning on a pack that is otherwise clean.
+A key filex no longer has leaves `translations/<tag>.json`, translated or not:
+every filex release drops a few, and a validator of your own that refuses keys
+the catalogue does not have would otherwise fail on each one. Its wording is
+still in your git history when the same idea comes back under another name.
+The plural forms your language adds to a key filex still has (`<key>_few`)
+stay. A retired key written back by hand is kept **out of** `filex-app.json`
+by `build`, so it never shows up as a warning on a pack that is otherwise
+clean.
 
 ## What is in here
 
