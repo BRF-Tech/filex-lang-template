@@ -1,5 +1,5 @@
 {
-  "filex": "0.57.0",
+  "filex": "0.57.3",
   "about": "Every key filex has - the interface and the text the server writes. `in`: explorer (plain {name} placeholders, @ | literal) · admin (vue-i18n: write {'@'} for @) · both (no @, | or {'…'} at all) · server (emails, public pages, notifications: {name} only, and exactly the placeholders of the English). `plural`: the key takes plural forms - explorer/server: extra keys <key>_zero|_one|_two|_few|_many for the categories your language has (the plain key is `other`); admin: `|`-separated forms, one per category, in CLDR order. `plural_categories`: which categories a language has. `tr`: the Turkish reference. docs: https://docs.filex.sh/PLUGIN-KIT#writing-a-language-pack",
   "plural_categories": {
     "ar": [
@@ -21407,6 +21407,78 @@
         "packages/core/src/FileExplorer.vue"
       ]
     },
+    "lang.default.account": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Hesabınızın dili ({lang})",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.default.browser": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Tarayıcının dili ({lang})",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.default.default": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Varsayılan ({lang})",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.default.host": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Bu sitenin varsayılanı ({lang})",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.hint": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Yalnızca bu tarayıcıda saklanır.",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.hint_account": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Bu tarayıcıda ve hesabınızda saklanır; diğer cihazlarınız ve bildirimleriniz de bu dili kullanır.",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.label": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Arayüz dili",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
+    "lang.menu": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Dil",
+      "where": [
+        "packages/core/src/components/Toolbar.vue"
+      ]
+    },
+    "lang.title": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Dil",
+      "where": [
+        "packages/core/src/components/LanguageDialog.vue"
+      ]
+    },
     "language.fromApp": {
       "in": "admin",
       "syntax": "vue-i18n",
@@ -32110,6 +32182,54 @@
       "tr": "İndeksin neyi okuduğu ve ne kadar bellek kullanabileceği Ayarlar → Genel sayfasında ayarlanır.",
       "where": [
         "web/src/views/SearchTest.vue"
+      ]
+    },
+    "search.settings.extractMemory.auto": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Şu an {ceiling}, indeksleme belleğinden.",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
+      ]
+    },
+    "search.settings.extractMemory.desc": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "PDF ve ofis dosyaları kendi süreçlerinde okunur. Bundan fazla bellek isteyen dosyanın okunması durdurulur ve dosya yalnızca adıyla bulunur; filex çalışmaya devam eder. 0, sınırı indeksleme belleğinden alır ve aynı anda okunan dosyalar arasında paylaştırır.",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
+      ]
+    },
+    "search.settings.extractMemory.hint": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "{min} ile {max} MB arası, otomatik için 0. Okunan bir sonraki dosyadan itibaren geçerli.",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
+      ]
+    },
+    "search.settings.extractMemory.label": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Sınır (MB)",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
+      ]
+    },
+    "search.settings.extractMemory.set": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Şu an {ceiling}.",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
+      ]
+    },
+    "search.settings.extractMemory.title": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Tek dosyayı okuma belleği",
+      "where": [
+        "web/src/components/SearchSettingsCard.vue"
       ]
     },
     "search.settings.indexOff": {
