@@ -1,5 +1,5 @@
 {
-  "filex": "0.57.3",
+  "filex": "0.57.5",
   "about": "Every key filex has - the interface and the text the server writes. `in`: explorer (plain {name} placeholders, @ | literal) · admin (vue-i18n: write {'@'} for @) · both (no @, | or {'…'} at all) · server (emails, public pages, notifications: {name} only, and exactly the placeholders of the English). `plural`: the key takes plural forms - explorer/server: extra keys <key>_zero|_one|_two|_few|_many for the categories your language has (the plain key is `other`); admin: `|`-separated forms, one per category, in CLDR order. `plural_categories`: which categories a language has. `tr`: the Turkish reference. docs: https://docs.filex.sh/PLUGIN-KIT#writing-a-language-pack",
   "plural_categories": {
     "ar": [
@@ -39095,6 +39095,12 @@
       "vars": {
         "name": "a file or folder name, as it is on disk"
       }
+    },
+    "server.ops.wait.storage_scan": {
+      "in": "server",
+      "syntax": "server",
+      "tr": "Sırasını bekliyor: depo taranıyor",
+      "about": "Why a job waiting in the operations centre (the explorer's tray, the admin panel's tray, an agent's op_get) has not started yet, shown in place of the plain Queued. storage_scan: a scan of the storage holds the job back for a moment; it runs as soon as the scan lets it through. A short status line without a full stop."
     },
     "server.origin.refused": {
       "in": "server",

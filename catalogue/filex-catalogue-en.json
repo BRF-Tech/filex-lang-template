@@ -5140,6 +5140,7 @@
   "server.onlyoffice.saved_beside_title": "Your edit was saved as {saved}",
   "server.onlyoffice.saved_conflict_body": "{name} was changed somewhere else after your editing session opened it, so your edit was not written over that version: it is in {saved}, in the same folder. {name} keeps the other change.",
   "server.onlyoffice.saved_conflict_title": "{name} changed while you were editing it",
+  "server.ops.wait.storage_scan": "Waiting for its turn: the storage is being scanned",
   "server.origin.refused": "This change was sent from another site, not from filex itself, so it was refused to protect your session. If that site embeds filex on purpose, an administrator can allow it with `FILEX_CORS_ALLOWED_ORIGINS`.",
   "server.perm.action.access.api": "create API keys",
   "server.perm.action.access.desktop": "sign in from the desktop app",
