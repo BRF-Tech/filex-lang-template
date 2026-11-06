@@ -1,5 +1,5 @@
 {
-  "filex": "0.58.0",
+  "filex": "0.59.0",
   "about": "Every key filex has - the interface and the text the server writes. `in`: explorer (plain {name} placeholders, @ | literal) · admin (vue-i18n: write {'@'} for @) · both (no @, | or {'…'} at all) · server (emails, public pages, notifications: {name} only, and exactly the placeholders of the English). `plural`: the key takes plural forms - explorer/server: extra keys <key>_zero|_one|_two|_few|_many for the categories your language has (the plain key is `other`); admin: `|`-separated forms, one per category, in CLDR order. `plural_categories`: which categories a language has. `tr`: the Turkish reference. docs: https://docs.filex.sh/PLUGIN-KIT#writing-a-language-pack",
   "plural_categories": {
     "ar": [
@@ -7486,7 +7486,7 @@
     "authProviders.fieldHints.show_refusal_reason": {
       "in": "admin",
       "syntax": "vue-i18n",
-      "tr": "Varsayılan olarak kapalı. Açıkken, parolası doğru olduğu hâlde burada oturum açamayan kişiye (ilk oturum açışta hesap açılmıyorsa ya da izinli bir grupta değilse) nedeni söylenir. O zaman oturum açma formu, tahmin yürüten birine de parolanın doğru olduğunu söyler; bu parola, aynı hesapları kullanan başka servisleri de açıyor olabilir."
+      "tr": "Varsayılan olarak kapalı. Açıkken, parolası doğru olduğu hâlde burada oturum açamayan kişiye (ilk oturum açışta hesap açılmıyorsa ya da izinli bir grupta değilse) nedeni söylenir."
     },
     "authProviders.fieldHints.sync_disable_missing": {
       "in": "admin",
@@ -7521,7 +7521,7 @@
     "authProviders.fieldHints.trust_email": {
       "in": "admin",
       "syntax": "vue-i18n",
-      "tr": "Varsayılan olarak kapalı. Kapalıyken, sağlayıcının doğrulanmış olarak işaretlemediği bir adres, henüz bir SSO kimliğine bağlanmamış mevcut bir hesabı açmaz; bu adres için yeni hesap da bir yönetici onaylayana kadar devre dışı açılır. Yalnız adresleri gerçekten sahiplerine ait olan bir sağlayıcıda açın: orada bir adres belirleyebilen herkes, o adresteki hesapla oturum açabilir.",
+      "tr": "Varsayılan olarak kapalı. Kapalıyken, sağlayıcının doğrulanmış olarak işaretlemediği bir adres, henüz bir SSO kimliğine bağlanmamış mevcut bir hesabı açmaz; bu adres için yeni hesap da bir yönetici onaylayana kadar devre dışı açılır.",
       "where": [
         "web/src/views/TenantEdit.vue"
       ]
@@ -7530,6 +7530,19 @@
       "in": "admin",
       "syntax": "vue-i18n",
       "tr": "Oturum açan kişiyi bulur. Her %s, yazdığı addır."
+    },
+    "authProviders.fieldRisks.show_refusal_reason": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Oturum açma formu, tahmin yürüten birine de parolanın doğru olduğunu söyler; bu parola, aynı hesapları kullanan başka servisleri de açıyor olabilir."
+    },
+    "authProviders.fieldRisks.trust_email": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Yalnız adresleri gerçekten sahiplerine ait olan bir sağlayıcıda açın: orada bir adres belirleyebilen herkes, o adresteki hesapla oturum açabilir.",
+      "where": [
+        "web/src/views/TenantEdit.vue"
+      ]
     },
     "authProviders.fields.admin_group": {
       "in": "admin",
@@ -10244,7 +10257,7 @@
     "conn.guide.ftps.curl.sslReqd": {
       "in": "explorer",
       "syntax": "plain",
-      "tr": "--ssl-reqd isteğe bağlı değil: curl'ün düz metne geri düşmek yerine TLS'i ZORUNLU kılmasını sağlar. Bu sunucu zaten düz metni reddediyor, ama alışkanlık sizi reddetmeyen sunuculara karşı korur.",
+      "tr": "--ssl-reqd isteğe bağlı değil: curl'ün düz metne geri düşmek yerine TLS'i ZORUNLU kılmasını sağlar. Bu alışkanlık sizi düz metne izin veren sunuculara karşı korur.",
       "where": [
         "packages/core/src/lib/connectionGuides.ts"
       ]
@@ -10281,10 +10294,26 @@
         "packages/core/src/lib/connectionGuides.ts"
       ]
     },
+    "conn.guide.ftps.fact.modeHintPlain": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Yönetici, TLS yapamayan cihazlar için burada şifresiz FTP'ye izin veriyor. TLS yapabilen her şey yine de \"Require explicit FTP over TLS\" seçmeli; \"plain FTP\" ya da \"implicit\" asla.",
+      "where": [
+        "packages/core/src/lib/connectionGuides.ts"
+      ]
+    },
     "conn.guide.ftps.fact.modeValue": {
       "in": "explorer",
       "syntax": "plain",
       "tr": "FTPS - açık (explicit) TLS, zorunlu",
+      "where": [
+        "packages/core/src/lib/connectionGuides.ts"
+      ]
+    },
+    "conn.guide.ftps.fact.modeValuePlain": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "FTPS - açık (explicit) TLS, şifresiz FTP'ye izin var",
       "where": [
         "packages/core/src/lib/connectionGuides.ts"
       ]
@@ -10428,7 +10457,15 @@
     "conn.guide.ftps.note.tls": {
       "in": "explorer",
       "syntax": "plain",
-      "tr": "TLS zorunludur ve kapatan bir düğme yoktur. Düz FTP parolanızı açık metin gönderir, ardından dosyanızı da.",
+      "tr": "Bu sunucuda TLS zorunludur. Düz FTP parolanızı açık metin gönderir, ardından dosyanızı da.",
+      "where": [
+        "packages/core/src/lib/connectionGuides.ts"
+      ]
+    },
+    "conn.guide.ftps.note.tlsPlain": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Bu sunucu şifresiz FTP'ye izin veriyor. TLS kullanmayan istemci parolanızı açık gönderir, ardından dosyanızı da; TLS isteyen istemci TLS'te kalır.",
       "where": [
         "packages/core/src/lib/connectionGuides.ts"
       ]
@@ -10444,7 +10481,15 @@
     "conn.guide.ftps.printer.noTLS": {
       "in": "explorer",
       "syntax": "plain",
-      "tr": "Tara-ve-gönder yazılımlarının önemli bir kısmı TLS konuşamıyor. Bu sunucu öyle bir cihazla konuşmayacak ve bu bilinçli: alternatifi, belgelerinizin ve parolanızın ofis ağında açık metin dolaşması.",
+      "tr": "Tara-ve-gönder yazılımlarının önemli bir kısmı TLS konuşamıyor. Bu sunucu, yöneticisi şifresiz FTP'ye izin vermedikçe öyle bir cihazla konuşmaz: alternatifi, belgelerinizin ve parolanızın ofis ağında açık gitmesidir.",
+      "where": [
+        "packages/core/src/lib/connectionGuides.ts"
+      ]
+    },
+    "conn.guide.ftps.printer.plainAllowed": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "Tara-ve-gönder yazılımlarının önemli bir kısmı TLS konuşamıyor. Bu sunucu öyle bir cihaza izin veriyor ve cihazın gönderdiği her şey ağda açık gider: ona kendine ait bir API anahtarı verin ve güvendiğiniz bir ağda tutun.",
       "where": [
         "packages/core/src/lib/connectionGuides.ts"
       ]
@@ -10501,6 +10546,14 @@
       "in": "explorer",
       "syntax": "plain",
       "tr": "FTPS, yalnızca FTP öğrenmiş ekipman için var: tarayıp-klasöre-atan yazıcılar, EDI muhatapları, eski laboratuvar ve endüstri yazılımları. Her zaman TLS üzerinden.",
+      "where": [
+        "packages/core/src/lib/connectionGuides.ts"
+      ]
+    },
+    "conn.guide.ftps.summaryPlain": {
+      "in": "explorer",
+      "syntax": "plain",
+      "tr": "FTPS, yalnızca FTP öğrenmiş ekipman için var: tarayıp-klasöre-atan yazıcılar, EDI muhatapları, eski laboratuvar ve endüstri yazılımları. TLS üzerinden çalışır, bu sunucu şifresiz FTP'ye de izin veriyor.",
       "where": [
         "packages/core/src/lib/connectionGuides.ts"
       ]
@@ -21547,6 +21600,16 @@
       "syntax": "vue-i18n",
       "tr": "Uygulamalar ve birlikte düzenleme"
     },
+    "instanceSettings.groups.connections.desc": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "filex'in kendi sunduğu protokollerin TLS olmadan çalışıp çalışamayacağı. Anahtarı yalnızca FTPS'in vardır: web uygulaması, WebDAV ve S3 şifrelemeyi filex'in önünde duran katmandan alır, SFTP her zaman şifreler, NFS ise hiç şifrelemez."
+    },
+    "instanceSettings.groups.connections.title": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Şifrelemesiz bağlantılar"
+    },
     "instanceSettings.groups.general.desc": {
       "in": "admin",
       "syntax": "vue-i18n",
@@ -21666,6 +21729,21 @@
       "in": "admin",
       "syntax": "vue-i18n",
       "tr": "Kaydedilmemiş ortak düzenlemeleri tutma süresi"
+    },
+    "instanceSettings.items.ftps_allow_plain.hint": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "TLS yapamayan bir belge tarayıcısı, yazıcı ya da başka bir cihaz için. Kapalıyken TLS istemeyen istemci, parola gönderemeden reddedilir. TLS isteyen istemci her iki durumda da iki kanalda TLS'te kalır."
+    },
+    "instanceSettings.items.ftps_allow_plain.label": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "FTPS ucunda şifresiz FTP'ye izin ver"
+    },
+    "instanceSettings.items.ftps_allow_plain.risk": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "TLS kullanmayan istemci parolasını ve dosyalarını açık gönderir: onunla bu sunucu arasındaki ağda bulunan herkes bunları okuyup değiştirebilir ve o parolayla oturum açabilir. Böyle bir cihaza bir kişinin parolasını değil, kendine ait bir API anahtarı verin."
     },
     "instanceSettings.items.instance_default_locale.hint": {
       "in": "admin",
@@ -22585,6 +22663,14 @@
       "in": "admin",
       "syntax": "vue-i18n",
       "tr": "Yalnızca filex'in önünde girişleri zaten sınırlayan bir şey varsa kapatın.",
+      "where": [
+        "web/src/views/LoginSecurity.vue"
+      ]
+    },
+    "loginSecurity.limit.enabledRisk": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Sınır kapalıyken herkes, bu sunucunun cevap verdiği hızda parola deneyebilir.",
       "where": [
         "web/src/views/LoginSecurity.vue"
       ]
@@ -32872,6 +32958,14 @@
         "packages/core/src/FileExplorer.vue"
       ]
     },
+    "securityOff.note": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Bu ayar güvenli değildir ve önerilmez. Ne yaptığınızı biliyorsanız uygulayın.",
+      "where": [
+        "web/src/components/ui/SecurityOffNote.vue"
+      ]
+    },
     "selection.clear": {
       "in": "explorer",
       "syntax": "plain",
@@ -39715,6 +39809,12 @@
       "tr": "ONLYOFFICE bu düzenleme oturumunun kimin için açıldığını bildirmedi; filex burada kimin dosya oluşturabileceğini anlayamadı.",
       "about": "The bell of the people who edited a document in ONLYOFFICE, when the document server's save was written beside the file (in another format) or not written at all. A title, and one or two sentences under it."
     },
+    "server.onlyoffice.refused_no_modify": {
+      "in": "server",
+      "syntax": "server",
+      "tr": "Bu düzenleme oturumundaki kimse belgeyi artık değiştiremiyor. Bir düzenlemeyi saklamak için belgeyi kapatmadan önce ONLYOFFICE'in Dosya menüsünden indirip başka bir yere kaydedin.",
+      "about": "The bell of the people who edited a document in ONLYOFFICE, when the document server's save was written beside the file (in another format) or not written at all. A title, and one or two sentences under it."
+    },
     "server.onlyoffice.refused_not_converted": {
       "in": "server",
       "syntax": "server",
@@ -41412,6 +41512,25 @@
       "about": "Admin panel → Storages (Add storage / edit a storage): why the storage's settings were refused. Shown as the error when saving. File and folder patterns (.git, *.tmp, downloads/incomplete/**) and the example folder names stay as written.",
       "vars": {
         "field": "the setting's key as the driver names it (password, secret_key, private_key), shown as written"
+      }
+    },
+    "server.storage.secret_check_off": {
+      "in": "server",
+      "syntax": "server",
+      "tr": "Sertifika denetimini kapatmak için {field} alanını yeniden yazın. Kayıtlı bir parola ya da anahtar, artık denetlenmeyen bir sunucuya gönderilmez.",
+      "about": "Admin panel → Storages (Add storage / edit a storage): why the storage's settings were refused. Shown as the error when saving. File and folder patterns (.git, *.tmp, downloads/incomplete/**) and the example folder names stay as written.",
+      "vars": {
+        "field": "the setting's key as the driver names it (password, secret_key, private_key), shown as written"
+      }
+    },
+    "server.storage.secret_protection_off": {
+      "in": "server",
+      "syntax": "server",
+      "tr": "Bu değişiklik bağlantının korumasını zayıflatıyor ({setting}): {field} alanını yeniden yazın. Kayıtlı bir parola ya da anahtar, kaydedildiğinden daha az korunan ya da başka bir sunucuya güvenen bir bağlantıyla gönderilmez.",
+      "about": "Admin panel → Storages (Add storage / edit a storage): why the storage's settings were refused. Shown as the error when saving. File and folder patterns (.git, *.tmp, downloads/incomplete/**) and the example folder names stay as written.",
+      "vars": {
+        "field": "the setting's key as the driver names it (password, bind_password, smtp.password), shown as written",
+        "setting": "the key of the protection the change weakens (tls, start_tls, ca_pem, host_key, smtp.tls...), shown as written"
       }
     },
     "server.store.intent_expired": {
@@ -43708,6 +43827,14 @@
         "web/src/views/Settings.vue"
       ]
     },
+    "settings.smtp.encryptionNoneRisk": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Her ileti ağda şifresiz gider: yoldaki herkes onu ve içindeki bağlantıları okuyabilir. Posta hesabının parolası bu yolla yalnız bu makinedeki bir sunucuya gider; başka bir sunucuya filex parolayı göndermez ve oturum açma başarısız olur.",
+      "where": [
+        "web/src/views/Settings.vue"
+      ]
+    },
     "settings.smtp.enterEmail": {
       "in": "admin",
       "syntax": "vue-i18n",
@@ -45814,6 +45941,11 @@
       "syntax": "shared",
       "tr": "Her sunucu anahtarını kabul eder. Yalnızca geçici sunucular için."
     },
+    "storages.fieldHelp.insecureSkipTlsVerify": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Bu sunucudan gelen her sertifikayı kabul eder: başka bir yolla güvenilemeyen, kendinden imzalı ya da özel bir sertifika için."
+    },
     "storages.fieldHelp.keyPath": {
       "in": "both",
       "syntax": "shared",
@@ -45929,6 +46061,26 @@
       "syntax": "shared",
       "tr": "Tek bir denemenin sunucudan bir yaşam belirtisi için bekleyebileceği süre: bağlanma, oturum açma, her isteğin cevabı ve bir aktarımın her yeni parçası. İlerleyen bir aktarım, süresi ne olursa olsun hiçbir zaman kesilmez; sunucunun almayı bıraktığı bir yükleme 60 saniye sonra, bu değer daha uzunsa bu kadar sonra kesilir. Kopyalama, taşıma ve silme cevap için 10 dakikaya kadar bekler, çünkü sunucu bunları ancak iş bittiğinde cevaplar."
     },
+    "storages.fieldRisk.followSymlinks": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Bir bağlantı bu makinede herhangi bir yere gidebilir: bu depoyu kullanabilen herkes, bu klasörün ne kadar dışında olursa olsun bağlantının gösterdiği yere ulaşır, onu değiştirir ve siler."
+    },
+    "storages.fieldRisk.insecureSkipHostKey": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "filex ile bu sunucunun arasına girebilen herkes onun yerine geçebilir: geçen her dosyayı okuyup değiştirebilir ve bu bağlantının parolasını ele geçirebilir."
+    },
+    "storages.fieldRisk.insecureSkipTlsVerify": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "filex ile bu sunucunun arasına girebilen herkes onun yerine geçebilir: geçen her dosyayı okuyup değiştirebilir ve bu bağlantının kimlik bilgilerini ele geçirebilir. Sertifikaya güvenmek denetimi açık tutar: belgelerde Depolama bölümüne bakın."
+    },
+    "storages.fieldRisk.plainFtp": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "FTPS olmadan parola ve her dosya ağda şifresiz gider: yoldaki herkes okuyup değiştirebilir."
+    },
     "storages.fields.accessKey": {
       "in": "both",
       "syntax": "shared",
@@ -45983,6 +46135,11 @@
       "in": "both",
       "syntax": "shared",
       "tr": "Sunucu anahtarı doğrulamasını atla (güvensiz)"
+    },
+    "storages.fields.insecureSkipTlsVerify": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Sertifika doğrulamasını atla (güvensiz)"
     },
     "storages.fields.keyPath": {
       "in": "both",
@@ -47666,6 +47823,14 @@
       "in": "admin",
       "syntax": "vue-i18n",
       "tr": "Platform, bu kiracının sağlayıcılarının iç ağ adreslerine ve düz ldap://'ye ulaşmasına izin veriyor.",
+      "where": [
+        "web/src/components/TenantSelfService.vue"
+      ]
+    },
+    "tenantSelf.insecureRisk": {
+      "in": "admin",
+      "syntax": "vue-i18n",
+      "tr": "Kiracının sağlayıcısı bu sunucunun iç ağındaki makinelere ulaşabilir, LDAP bağlama parolası da ağda şifresiz gidebilir.",
       "where": [
         "web/src/components/TenantSelfService.vue"
       ]
