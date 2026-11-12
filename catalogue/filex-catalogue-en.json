@@ -6474,6 +6474,7 @@
   "templates.name.page_folder": "A shared folder (without JavaScript)",
   "templates.name.page_layout": "Page layout (every page below)",
   "templates.name.page_pin": "PIN gate",
+  "templates.name.page_route": "A page of an app's address (a short link's preview)",
   "templates.name.page_shell": "Public link page (frame)",
   "templates.name.page_unlocked": "PIN accepted",
   "templates.name.page_zip_wait": "Preparing a ZIP",
